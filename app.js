@@ -1,3 +1,4 @@
+let secretArray = [];
 let maxNumber = randomMaxNumber();
 let secretNumber = randomNumber();
 let resetBtn = document.getElementById("reset");
@@ -9,12 +10,32 @@ function randomMaxNumber() {
 }
 
 function randomNumber() {
-  return parseInt(Math.random() * maxNumber + 1);
+  let secretChosen = parseInt(Math.random() * maxNumber + 1);
+  let arraySize = secretArray.length;
+
+  if (arraySize == maxNumber) {
+    secretArray = [];
+  }
+
+  if (secretArray.includes(secretChosen)) {
+    return randomNumber();
+  } else {
+    secretArray.push(secretChosen);
+    return secretChosen;
+  }
 }
 
 function screenText(tag, text) {
   let fieldText = document.querySelector(tag);
   fieldText.innerHTML = text;
+  if ("speechSynthesis" in window) {
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.rate = 1.5;
+    window.speechSynthesis.speak(utterance);
+  } else {
+    console.log("Web Speech not supported on this browser.");
+  }
 }
 
 function welcomeMessage() {
